@@ -104,8 +104,9 @@ write.table(und, file = "C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS se
   
   cs <- subset(c, folder == "1W_undulation")
 
+# -----------
 # Station 3W
-# -----------------------------
+# -----------
 files <- list.files(path = "E:/OST2014_d27_bigcamera/d27/ClassifiedSegments", recursive = T, full.names = T, include.dirs = T, pattern = ".jpg")
 f <- as.data.frame(files, stringsAsFactors = FALSE)
 
@@ -171,28 +172,36 @@ file.copy(from = od, to = nd)
 
 #make a list of the original undulation transect segment classifications
 write.table(und, file = "C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3W_undulation/3W_d27_undulation_ccs_class.txt", sep = "," , row.names = FALSE, col.names = TRUE)
+
+# --------
 # Station 3C
 # ----------
-files <- list.files(path = "E:/OST2014_d27_bigcamera/d27/ClassifiedSegments", recursive = T, full.names = T, include.dirs = T, pattern = ".jpg")
-f <- as.data.frame(files, stringsAsFactors = FALSE)
+# If file list is not already in the R environment
+  files <- list.files(path = "E:/OST2014_d19_bigcamera/d19/ClassifiedSegments", recursive = T, full.names = T, include.dirs = T, pattern = ".jpg")
+  f <- as.data.frame(files, stringsAsFactors = FALSE)
 
-colnames(f) <- c("dir")
+  colnames(f) <- c("dir")
 
-f$dir <- as.character(f$dir)
-f$t0 <- str_split_fixed(f$dir, "/", 6)
-f$dir <- str_sub(f$t0[,6])
-f$class <- str_sub(f$t0[,5])
+  f$dir <- as.character(f$dir)
+  f$t0 <- str_split_fixed(f$dir, "/", 6)
+  f$dir <- str_sub(f$t0[,6])
+  f$class <- str_sub(f$t0[,5])
+  
+  f$t2 <- str_sub(f$t0[,6])
+  f$t3 <- str_split_fixed(f$t2, "_", 2)
+  f$dtf <- str_sub(f$t3[,1])
+  f$crop <- str_sub(f$t3[,2])
+  
+  f$t0 <- NULL
+  f$t2 <- NULL
+  f$t3 <- NULL
+   f$dT <- str_sub(f$dtf, 1, 18)
 
-f$t2 <- str_sub(f$t0[,6])
-f$t3 <- str_split_fixed(f$t2, "_", 2)
-f$dtf <- str_sub(f$t3[,1])
-f$crop <- str_sub(f$t3[,2])
+#If segments already read-in from "put frame by frame segments into classified folders.R"
+  # f <- c
+  # names(f)[names(f)=="files_jpg"] <- "dir"
+  # names(f)[names(f)=="dateTime"] <- "dT"
 
-f$t0 <- NULL
-f$t2 <- NULL
-f$t3 <- NULL
-
-f$dT <- str_sub(f$dtf, 1, 18)
 
 f$yy <- str_sub(f$dT, 1, 4)
 f$mm <- str_sub(f$dT, 5, 6)
@@ -207,9 +216,9 @@ f$dateTime <- str_c(f$date, f$time, sep=" ")
 f$dateTime <- as.POSIXct(strptime(f$dateTime, format="%Y-%m-%d %H:%M:%OS", tz="America/New_York"))
 
 #start time of undulation transect
-und_s <- subset(f, time > "06:42")
+und_s <- subset(f, time > "06:47")
 #end time of undulation transect
-und <- subset(und_s, time < "07:44")
+und <- subset(und_s, time < "08:25")
 
 # clean up
 und$dT <- NULL
@@ -224,21 +233,20 @@ und$sec <- NULL
 
 #create directory and subdirectories
 class <- unique(und$class)
-dir.create("C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3W_undulation")
+dir.create("C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3c_undulation")
 
 for (i in 1:length(class)){
-  folders <- paste0("C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3W_undulation/",class[i])
+  folders <- paste0("C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3c_undulation/",class[i])
   dir.create(folders)
 }
 
 #copy files over to a specific "undulation tow folder"
-od <- paste0("E:/OST2014_d27_bigcamera/d27/ClassifiedSegments/",und$class,"/",und$dir)
-nd <- paste0("C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3W_undulation/",und$class,"/",und$dir)
+od <- paste0("E:/OST2014_d19_bigcamera/d19/ClassifiedSegments/",und$class,"/",und$dir)
+nd <- paste0("C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3c_undulation/",und$class,"/",und$dir)
 file.copy(from = od, to = nd)
 
 #make a list of the original undulation transect segment classifications
-write.table(und, file = "C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3W_undulation/3W_d27_undulation_ccs_class.txt", sep = "," , row.names = FALSE, col.names = TRUE)
+write.table(und, file = "C:/Users/kelly.robinson/Documents/OSTRICH 2014_ISIIS segments_REU/3c_undulation/3c_d19_undulation_ccs_class.txt", sep = "," , row.names = FALSE, col.names = TRUE)
 
 
-
-
+#
